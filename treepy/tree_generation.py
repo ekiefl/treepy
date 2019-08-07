@@ -30,7 +30,6 @@ class DisplayablePath(object):
 
     @classmethod
     def make_tree(cls, root, parent=None, is_last=False, criteria=None):
-        cls.num_paths += 1
         root = Path(str(root))
         criteria = criteria or cls._default_criteria
 
@@ -47,8 +46,10 @@ class DisplayablePath(object):
             is_last = count == len(children)
             if path.is_dir():
                 for obj in cls.make_tree(path, parent=displayable_root, is_last=is_last, criteria=criteria):
+                    cls.num_paths += 1
                     yield obj
             else:
+                cls.num_paths += 1
                 yield cls(path, displayable_root, is_last)
             count += 1
 
@@ -73,7 +74,8 @@ class DisplayablePath(object):
             display += '/'
 
         if self.args.get('q'):
-            display = display + '{} → ${}{}{}'.format(fore.GREY_42, treepy.ENV_PREFIX, self.num_paths, style.RESET)
+            slash = '/' if self.path.is_dir() else ''
+            display = display + '{} → ${}{}{}{}'.format(fore.GREY_42, treepy.ENV_PREFIX, self.num_paths, slash, style.RESET)
 
         return display
 
