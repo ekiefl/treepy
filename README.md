@@ -7,7 +7,7 @@ Bare-bones CLI for displaying a tree of file structure
 
 A couple of cases.
 
-### Getting help: `treepy -h`
+### `treepy -h` (getting help)
 
 ```
 usage: treepy_python [-h] [-d] [-a] [-q] [-f] path
@@ -23,7 +23,7 @@ optional arguments:
   -f          Display the full path
 ```
 
-### `treepy` (default directory is `.`)
+### `treepy` (most simple command)
 
 ```
 treepy/
@@ -58,7 +58,7 @@ treepy/
     └── top_level.txt
 ```
 
-### Directories only: `treepy -d`
+### `treepy -d` (directories only)
 
 ```
 treepy/
@@ -74,7 +74,7 @@ treepy/
 └── UNKNOWN.egg-info/
 ```
 
-### Display full paths: `treepy -df`
+### `treepy -df` (display full paths)
 
 ```
 d/Users/evan/Software/treepy/
@@ -90,7 +90,7 @@ d/Users/evan/Software/treepy/
 └── /Users/evan/Software/treepy/UNKNOWN.egg-info/
 ```
 
-### Quick-access env variables: `source treepy -dq`
+### `source treepy -dq` (quick-access env varibles)
 
 For this, it is **essential** that the command is run as `source treepy`, otherwise environmental variables will not be retained in the shell you run `treepy` from.
 
@@ -106,7 +106,16 @@ treepy/ → $TREE1
 ├── treepy/ → $TREE9
 │   └── __pycache__/ → $TREE10
 └── UNKNOWN.egg-info/ → $TREE11
+```
 
->>> echo $TREE1
+Each path in tree is stored as an environmental variable `TREE[X]`, where `[X]` is a number. Running
+
+```
+echo $TREE1
+``` 
+
+yields:
+
+```
 /Users/evan/Software/treepy
 ```
