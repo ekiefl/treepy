@@ -7,10 +7,9 @@ Bare-bones CLI for displaying a tree of file structure
 
 A couple of cases.
 
-### Getting help
+### Getting help: `treepy -h`
 
 ```
->>> treepy h
 usage: treepy_python [-h] [-d] [-a] [-q] [-f] path
 
 positional arguments:
@@ -24,9 +23,9 @@ optional arguments:
   -f          Display the full path
 ```
 
-### Default dir is `.` if none is provided
+### `treepy` (default directory is `.`)
+
 ```
->>> treepy
 treepy/
 ├── bin/
 │   ├── treepy
@@ -59,10 +58,9 @@ treepy/
     └── top_level.txt
 ```
 
-### Directories only
+### Directories only: `treepy -d`
 
 ```
->>> treepy /Users/evan/Software/treepy/ -d
 treepy/
 ├── bin/
 ├── build/
@@ -76,11 +74,10 @@ treepy/
 └── UNKNOWN.egg-info/
 ```
 
-### Display full paths
+### Display full paths: `treepy -df`
 
 ```
->>> treepy -df
-/Users/evan/Software/treepy/
+d/Users/evan/Software/treepy/
 ├── /Users/evan/Software/treepy/bin/
 ├── /Users/evan/Software/treepy/build/
 │   ├── /Users/evan/Software/treepy/build/bdist.macosx-10.12-x86_64/
@@ -93,12 +90,11 @@ treepy/
 └── /Users/evan/Software/treepy/UNKNOWN.egg-info/
 ```
 
-### Create environmental variables of paths for quick access
+### Quick-access env variables: `source treepy -dq`
 
 For this, it is **essential** that the command is run as `source treepy`, otherwise environmental variables will not be retained in the shell you run `treepy` from.
 
 ```
->>> source treepy -dq
 treepy/ → $TREE1
 ├── bin/ → $TREE2
 ├── build/ → $TREE3
