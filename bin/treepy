@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -e
+
+# was a positional arg provided?
+pos_arg=False
+for var in "$@"; do
+    if [[ $var != -* ]]; then
+        pos_arg=True
+    fi
+done
+
+# if not, make it current directory
+if [[ $pos_arg == "False" ]]; then
+    args=". ""$@"
+else
+    args="$@"
+fi
+
+# if you have treepy but not treepy_python, try rerunning setup.py
+treepy_python $args
+
+# was -q in args? then call temp bash script
+for var in "$args"; do
+    if [[ $var == -* ]]; then
+        if [[ $var == *"q"* ]]; then
+            source ./.temp_treepy.sh
+            rm .temp_treepy.sh
+        fi
+    fi
+done
