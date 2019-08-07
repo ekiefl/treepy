@@ -23,8 +23,8 @@ treepy_python $args
 for var in "$args"; do
     if [[ $var == -* ]]; then
         if [[ $var == *"q"* ]]; then
-            source ./.temp_treepy.sh
-            rm .temp_treepy.sh
+            source ~/.temp_treepy.sh
+            rm ~/.temp_treepy.sh
         fi
     fi
 done

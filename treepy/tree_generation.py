@@ -46,10 +46,8 @@ class DisplayablePath(object):
         for path in children:
             is_last = count == len(children)
             if path.is_dir():
-                yield from cls.make_tree(path,
-                                         parent=displayable_root,
-                                         is_last=is_last,
-                                         criteria=criteria)
+                for obj in cls.make_tree(path, parent=displayable_root, is_last=is_last, criteria=criteria):
+                    yield obj
             else:
                 yield cls(path, displayable_root, is_last)
             count += 1

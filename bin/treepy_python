@@ -22,12 +22,12 @@ def main(args):
         line = path.displayable()
         print(line)
 
-        export_script_lines.append('export {}{}={}'.format(treepy.ENV_PREFIX,
+        export_script_lines.append('export {}{}=\"{}\"'.format(treepy.ENV_PREFIX,
                                                            path.num_paths,
                                                            str(path.path.resolve())))
 
     if args['q']:
-        with open('.temp_treepy.sh', 'w') as f:
+        with open(treepy.TEMP_FILE, 'w') as f:
             f.write('\n'.join(export_script_lines))
 
 
