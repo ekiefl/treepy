@@ -20,7 +20,7 @@ fi
 treepy_python $args
 
 # was -q in args? then call temp bash script
-for var in "$args"; do
+for var in $args; do
     if [[ $var == -* ]]; then
         if [[ $var == *"q"* ]]; then
             source ~/.temp_treepy.sh
