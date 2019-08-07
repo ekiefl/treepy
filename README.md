@@ -90,7 +90,7 @@ d/Users/evan/Software/treepy/
 └── /Users/evan/Software/treepy/UNKNOWN.egg-info/
 ```
 
-### `source treepy -dq` (quick-access env varibles)
+### `source treepy -dq` (quick-access environment variables)
 
 For this, it is **essential** that the command is run as `source treepy`, otherwise environmental variables will not be retained in the shell you run `treepy` from.
 
