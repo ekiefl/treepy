@@ -89,11 +89,17 @@ class DisplayablePath(object):
             display = self.path.name
 
         if self.path.is_dir():
-            display += '/'
+            display = treepy.STYLIZE_DIR(display + '/')
+
+        if self.path.is_file():
+            display = treepy.STYLIZE_FILE(display)
 
         if self.args.get('q') and not self.path.name == '...':
             slash = '/' if self.path.is_dir() else ''
-            display = display + '{} → ${}{}{}{}'.format(fore.GREY_42, treepy.ENV_PREFIX, self.num_paths, slash, style.RESET)
+            display = display + treepy.STYLIZE_QUICKACCESS(' → $' + treepy.ENV_PREFIX + str(self.num_paths) + slash)
+
+        if self.path.name == '...':
+            display = treepy.STYLIZE_MORE(display)
 
         if not self.path.name == '...': self.increment_number_paths()
 
@@ -107,14 +113,16 @@ class DisplayablePath(object):
                             if self.is_last
                             else self.display_filename_prefix_middle)
 
-        parts = ['{!s} {!s}'.format(_filename_prefix,
+        parts = ['{!s} {!s}'.format(treepy.STYLIZE_BRANCHES(_filename_prefix),
                                     self.displayname)]
 
         parent = self.parent
         while parent and parent.parent is not None:
-            parts.append(self.display_parent_prefix_middle
-                         if parent.is_last
-                         else self.display_parent_prefix_last)
+            extra = (self.display_parent_prefix_middle
+                     if parent.is_last
+                     else self.display_parent_prefix_last)
+
+            parts.append(treepy.STYLIZE_BRANCHES(extra))
             parent = parent.parent
 
         return ''.join(reversed(parts))
