@@ -36,10 +36,8 @@ class DisplayablePath(object):
         displayable_root = cls(root, parent, is_last)
         yield displayable_root
 
-        children = sorted(list(path
-                               for path in root.iterdir()
-                               if criteria(path)),
-                          key=lambda s: str(s).lower())
+        _getatime = lambda entry: entry.stat().st_atime
+        children = sorted((path for path in root.iterdir() if criteria(path)), key=_getatime, reverse=True)
 
         count = 1
         for path in children:
