@@ -46,12 +46,26 @@ class DisplayablePath(object):
             is_last = count == len(children)
             if path.is_dir():
                 for obj in cls.make_tree(path, parent=displayable_root, is_last=is_last, criteria=criteria):
-                    cls.num_paths += 1
+                    if cls.args.get('D') and obj.depth > cls.args.get('D'):
+                        continue
                     yield obj
+
+                    if cls.is_max_paths_per_depth_exceeded(count, is_last):
+                        yield cls('...', displayable_root, True)
+                        return
             else:
-                cls.num_paths += 1
                 yield cls(path, displayable_root, is_last)
+
+                if cls.is_max_paths_per_depth_exceeded(count, is_last):
+                    yield cls('...', displayable_root, True)
+                    return
+
             count += 1
+
+    @classmethod
+    def is_max_paths_per_depth_exceeded(cls, count, is_last):
+        max_paths_per_depth_exceeded = True if cls.args.get('m') and count == cls.args.get('m') else False
+        return max_paths_per_depth_exceeded and not is_last
 
     @classmethod
     def _default_criteria(cls, path):
@@ -63,6 +77,10 @@ class DisplayablePath(object):
 
         return True
 
+    @classmethod
+    def increment_number_paths(cls):
+        cls.num_paths += 1
+
     @property
     def displayname(self):
         if self.args.get('f'):
@@ -73,9 +91,11 @@ class DisplayablePath(object):
         if self.path.is_dir():
             display += '/'
 
-        if self.args.get('q'):
+        if self.args.get('q') and not self.path.name == '...':
             slash = '/' if self.path.is_dir() else ''
             display = display + '{} → ${}{}{}{}'.format(fore.GREY_42, treepy.ENV_PREFIX, self.num_paths, slash, style.RESET)
+
+        if not self.path.name == '...': self.increment_number_paths()
 
         return display
 

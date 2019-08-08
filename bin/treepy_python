@@ -23,8 +23,8 @@ def main(args):
         print(line)
 
         export_script_lines.append('export {}{}=\"{}\"'.format(treepy.ENV_PREFIX,
-                                                           path.num_paths,
-                                                           str(path.path.resolve())))
+                                                               path.num_paths - 1,
+                                                               str(path.path.resolve())))
 
     if args['q']:
         with open(treepy.TEMP_FILE, 'w') as f:
@@ -35,9 +35,16 @@ if __name__ == '__main__':
     ap = argparse.ArgumentParser()
     ap.add_argument('path', help='brief description')
     ap.add_argument('-d', action='store_true', help='Only display directories')
+    ap.add_argument('-f', action='store_true', help='Display the full path')
     ap.add_argument('-a', action='store_true', help='Include those starting with `.`')
     ap.add_argument('-q', action='store_true', help='Append quick-access variable path')
-    ap.add_argument('-f', action='store_true', help='Display the full path')
+    ap.add_argument('-D', default=10, type=int, help='Maximum depth, default 10')
+    ap.add_argument('-m', default=10, type=int, help='Max items to display per depth, default 10')
+    ap.add_argument('-A', action='store_true', help='Ignore parameters -D and -m (display all)')
     args = ap.parse_args().__dict__
+
+    if args['A']:
+        args['D'] = None
+        args['m'] = None
 
     main(args)

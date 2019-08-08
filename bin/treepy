@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
-set -e
 
 # was a positional arg provided?
 pos_arg=False
 for var in "$@"; do
     if [[ $var != -* ]]; then
-        pos_arg=True
+        re='^[0-9]+$'
+        if ! [[ $var =~ $re ]] ; then
+            pos_arg=True
+        fi
     fi
 done
 
@@ -23,8 +25,8 @@ treepy_python $args
 for var in $args; do
     if [[ $var == -* ]]; then
         if [[ $var == *"q"* ]]; then
-            source ~/.temp_treepy.sh
-            rm ~/.temp_treepy.sh
+            source ~/.treepy_temp.sh
+            rm ~/.treepy_temp.sh
         fi
     fi
 done
