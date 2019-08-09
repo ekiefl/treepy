@@ -33,7 +33,7 @@ def main(args):
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
-    ap.add_argument('path', help='brief description')
+    ap.add_argument('path', nargs='?', default=os.getcwd(), help='Root directory of tree. Default is working directory')
     ap.add_argument('-d', action='store_true', help='Only display directories')
     ap.add_argument('-f', action='store_true', help='Display the full path')
     ap.add_argument('-a', action='store_true', help='Include those starting with `.`')
