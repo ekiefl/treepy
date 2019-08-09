@@ -2,7 +2,7 @@ import os
 from setuptools import setup, find_packages
 
 setup(
-    name='',
+    name='treepy',
     version="0.5",
     packages=find_packages(),
     author_email = 'kiefl.evan@gmail.com',

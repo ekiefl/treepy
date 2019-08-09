@@ -19,11 +19,10 @@ class MultiLS(object):
         self.max_rows = args['R']
 
         terminal_size = int(os.popen('stty size', 'r').read().split()[1])
-        # ok we assume that there is at least 20 characters to work with
-        self.max_text_width = max([args.get('max_text_width') if args.get('max_text_width') else terminal_size, 20])
+        self.max_text_width = max([args.get('max_text_width') if args.get('max_text_width') else terminal_size, 0])
 
         self.display_data = []
-        self.display = ''
+        self.display_lines = []
 
 
     def get_parents(self, path, include_self=True):
@@ -46,11 +45,12 @@ class MultiLS(object):
                                for child in parent.iterdir()
                                if self.criteria(child)), key=_getatime, reverse=True)
 
-            self.display_data.append((self.display_parent(parent, depth),
-                                      self.display_children(children, depth)))
+            self.display_data.append((self.display_parent(parent, depth), self.display_children(children, depth)))
 
-
-        self.display = '\n'.join(['\n'.join(data) for data in reversed(self.display_data)])
+        self.display_data = list(reversed(self.display_data))
+        for parent, children in self.display_data:
+            self.display_lines.append(parent)
+            self.display_lines.extend(children)
 
 
     def display_children(self, children, depth):
@@ -109,10 +109,9 @@ class MultiLS(object):
         except StopIteration:
             more = ''
 
-        display = '\n'.join([''.join(row).rstrip() for row in itertools.zip_longest(*table.values(), fillvalue='')])
-        display += more
-
-        return display
+        rows = [''.join(row).rstrip() for row in itertools.zip_longest(*table.values(), fillvalue='')]
+        rows[-1] = more
+        return rows
 
 
     def stylize_child(self, child, child_str):
@@ -126,7 +125,7 @@ class MultiLS(object):
         diff = self.max_text_width - (len(prefix) + len(parent_str))
 
         if diff < 0:
-            display = prefix + '…' + parent_str[1:]
+            display = prefix + '…' + parent_str[1-diff:]
         else:
             display = prefix + parent_str
 

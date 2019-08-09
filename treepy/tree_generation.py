@@ -9,6 +9,8 @@ from pathlib import Path
 from colored import fore, back, style
 
 class DisplayablePath(object):
+    terminal_width = int(os.popen('stty size', 'r').read().split()[1])
+
     display_filename_prefix_middle = '├──'
     display_filename_prefix_last = '└──'
     display_parent_prefix_middle = '    '
@@ -62,7 +64,7 @@ class DisplayablePath(object):
 
     @classmethod
     def is_max_paths_per_depth_exceeded(cls, count, is_last):
-        max_paths_per_depth_exceeded = True if cls.args.get('m') and count == cls.args.get('m') else False
+        max_paths_per_depth_exceeded = True if cls.args.get('M') and count == cls.args.get('M') else False
         return max_paths_per_depth_exceeded and not is_last
 
     @classmethod
@@ -79,6 +81,19 @@ class DisplayablePath(object):
     def increment_number_paths(cls):
         cls.num_paths += 1
 
+    def truncate(self, display, quickaccess_display):
+        m = self.args['max_text_width'] if self.args.get('max_text_width') else self.terminal_width
+        diff1 = m - len(quickaccess_display) - 4 * self.depth
+        diff2 = m - len(quickaccess_display) - len(display) - 4 * self.depth
+
+        if diff1 < 0: # extreme case when max text width is smaller than the quickaccess_display
+            display = ''
+            quickaccess_display = '…' + quickaccess_display[-diff1 + 1:]
+        elif diff2 < 0: # display + quickaccess_display extends beyond max text width
+            display = '…' + display[-diff2 + 1:]
+
+        return display, quickaccess_display
+
     @property
     def displayname(self):
         if self.args.get('f'):
@@ -86,18 +101,25 @@ class DisplayablePath(object):
         else:
             display = self.path.name
 
+        if self.args.get('q') and not self.path.name == '...':
+            slash = '/' if self.path.is_dir() else ''
+            quickaccess_display = ' → $' + treepy.ENV_PREFIX + str(self.num_paths) + slash
+        else:
+            quickaccess_display = ''
+
+        display, quickaccess_display = self.truncate(display, quickaccess_display)
+
         if self.path.is_dir():
             display = treepy.STYLIZE_DIR(display + '/')
 
         if self.path.is_file():
             display = treepy.STYLIZE_FILE(display)
 
-        if self.args.get('q') and not self.path.name == '...':
-            slash = '/' if self.path.is_dir() else ''
-            display = display + treepy.STYLIZE_QUICKACCESS(' → $' + treepy.ENV_PREFIX + str(self.num_paths) + slash)
-
         if self.path.name == '...':
             display = treepy.STYLIZE_MORE(display)
+
+        if quickaccess_display:
+            display += treepy.STYLIZE_QUICKACCESS(quickaccess_display)
 
         if not self.path.name == '...': self.increment_number_paths()
 

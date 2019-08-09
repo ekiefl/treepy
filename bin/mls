@@ -8,18 +8,16 @@ from treepy.mls_generation import MultiLS
 import os
 import argparse
 
-from pathlib import Path
-
 def main(args):
     mls = MultiLS(args)
     mls.process()
-    print(mls.display)
+    for line in mls.display_lines:
+        print(line)
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
-    ap.add_argument('path', nargs='?', default = '.', help='brief description')
+    ap.add_argument('path', nargs='?', default = os.getcwd(), help='Root directory. Default is working directory')
     ap.add_argument('-d', action='store_true', help='Only display directories')
-    ap.add_argument('-f', action='store_true', help='Display the full path')
     ap.add_argument('-r', action='store_true', help='Use .. notation for paths relative to `path`')
     ap.add_argument('-a', action='store_true', help='Include those starting with `.`')
     ap.add_argument('-P', default=3, type=int, help='Number of parents to show')
