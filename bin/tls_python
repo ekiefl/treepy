@@ -60,16 +60,27 @@ def align_to_bottom(output1, output2):
     return output1, output2
 
 
+def extend_unused_space(output1, output2, total_space):
+    diff = total_space - output1.used_space - output2.used_space
+    if diff > 0:
+        last_line = output1.display_lines[-1]
+        last_line += ' ' * (diff + output1.used_space - treepy.get_non_ANSI_line_length(last_line) - 1) + treepy.STYLIZE_BRANCHES('♬')
+        output1.display_lines[-1] = last_line
+    return output1
+
+
 def main(args):
     terminal_width = int(os.popen('stty size', 'r').read().split()[1])
     lbuffer, mbuffer, rbuffer = 2, 3, 2
     usable_terminal_width = terminal_width - lbuffer - mbuffer - rbuffer
 
     if args['p']:
+        mls_width = int(usable_terminal_width * args['p'] / 100)
         args['max_text_width'] = int(usable_terminal_width * args['p'] / 100)
         mls_output = gen_mls_output(args)
 
-        args['max_text_width'] = usable_terminal_width - mls_output.used_space
+
+        args['max_text_width'] = usable_terminal_width - mls_width
         treepy_output = gen_treepy_output(args)
     else:
         args['max_text_width'] = terminal_width
@@ -79,11 +90,8 @@ def main(args):
         mls_output = gen_mls_output(args)
 
     mls_output, treepy_output = align_to_bottom(mls_output, treepy_output)
+    mls_output = extend_unused_space(mls_output, treepy_output, usable_terminal_width)
 
-    tabulate = treepy.tabulate([['\n'.join(mls_output.display_lines),
-                                 '\n'.join(treepy_output.display_lines)]], tablefmt=args['g'])
-
-    print(treepy.STYLIZE_TABULATE_BORDER(tabulate))
     print(treepy.tabulate([['\n'.join(mls_output.display_lines),
                             '\n'.join(treepy_output.display_lines)]], tablefmt=args['g']))
 
@@ -101,14 +109,14 @@ if __name__ == '__main__':
     groupT.add_argument('-d', action='store_true', help='Only display directories')
     groupT.add_argument('-f', action='store_true', help='Display the full path')
     groupT.add_argument('-q', action='store_true', help='Append quick-access variable path')
-    groupT.add_argument('-D', default=10, type=int, help='Maximum depth, default 10')
-    groupT.add_argument('-M', default=10, type=int, help='Max items to display per depth, default 10')
+    groupT.add_argument('-D', default=3, type=int, help='Maximum depth, default 3')
+    groupT.add_argument('-M', default=3, type=int, help='Max items to display per depth, default 3')
     groupT.add_argument('-A', action='store_true', help='Ignore parameters -D and -M')
 
     groupM = ap.add_argument_group('MLS', 'Parameters relating to mls')
-    groupM.add_argument('-P', default=3, type=int, help='Number of parents to show (mls)')
-    groupM.add_argument('-r', action='store_true', help='Use .. notation for paths relative to `path` (mls)')
-    groupM.add_argument('-R', default=None, type=int, help='Max number of rows to display in each parent directory (mls)')
+    groupM.add_argument('-P', default=3, type=int, help='Number of parents to show, default 3')
+    groupM.add_argument('-r', action='store_true', help='Use .. notation for paths relative to `path`')
+    groupM.add_argument('-R', default=5, type=int, help='Max number of rows to display in each parent directory, default 5')
 
     args = ap.parse_args().__dict__
 

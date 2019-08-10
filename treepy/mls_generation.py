@@ -105,12 +105,12 @@ class MultiLS(object):
 
         try:
             next(child_generator)
-            more = treepy.STYLIZE_MORE(' ▼')
+            more = treepy.STYLIZE_MORE('…')
         except StopIteration:
             more = ''
 
         rows = [''.join(row).rstrip() for row in itertools.zip_longest(*table.values(), fillvalue='')]
-        rows[-1] = more
+        if more: rows.append(more)
         return rows
 
 
