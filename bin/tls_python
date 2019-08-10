@@ -33,9 +33,11 @@ def gen_treepy_output(args):
     treepy_display_lines = []
     for path in paths:
         treepy_display_lines.append(path.displayable())
-        export_script_lines.append('export {}{}=\"{}\"'.format(treepy.ENV_PREFIX,
-                                                               path.num_paths - 1,
-                                                               str(path.path.resolve())))
+
+        if str(path.path) != '…':
+            export_script_lines.append('export {}{}=\"{}\"'.format(treepy.ENV_PREFIX,
+                                                                   path.num_paths - 1,
+                                                                   str(path.path.resolve())))
 
     if args['q']:
         with open(treepy.TEMP_FILE, 'w') as f:

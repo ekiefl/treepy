@@ -55,13 +55,13 @@ class DisplayablePath(object):
                     yield obj
 
                     if cls.is_max_paths_per_depth_exceeded(count, is_last):
-                        yield cls('...', displayable_root, True)
+                        yield cls('…', displayable_root, True)
                         return
             else:
                 yield cls(path, displayable_root, is_last)
 
                 if cls.is_max_paths_per_depth_exceeded(count, is_last):
-                    yield cls('...', displayable_root, True)
+                    yield cls('…', displayable_root, True)
                     return
 
             count += 1
@@ -105,7 +105,7 @@ class DisplayablePath(object):
         else:
             display = self.path.name
 
-        if self.args.get('q') and not self.path.name == '...':
+        if self.args.get('q') and not self.path.name == '…':
             slash = '/' if self.path.is_dir() else ''
             quickaccess_display = ' → $' + treepy.ENV_PREFIX + str(self.num_paths) + slash
         else:
@@ -119,13 +119,13 @@ class DisplayablePath(object):
         if self.path.is_file():
             display = treepy.STYLIZE_FILE(display)
 
-        if self.path.name == '...':
+        if self.path.name == '…':
             display = treepy.STYLIZE_MORE(display)
 
         if quickaccess_display:
             display += treepy.STYLIZE_QUICKACCESS(quickaccess_display)
 
-        if not self.path.name == '...': self.increment_number_paths()
+        if not self.path.name == '…': self.increment_number_paths()
 
         return display
 
