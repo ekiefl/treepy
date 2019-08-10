@@ -36,38 +36,8 @@ optional arguments:
 
 ### `treepy` (most simple command)
 
-```
-treepy/
-├── bin/
-│   ├── treepy
-│   └── treepy_python
-├── build/
-│   ├── bdist.macosx-10.12-x86_64/
-│   ├── lib/
-│   │   └── treepy/
-│   │       ├── __init__.py
-│   │       └── tree_generation.py
-│   └── scripts-3.6/
-│       ├── treepy
-│       └── treepy_python
-├── dist/
-│   └── UNKNOWN-0.1-py3.6.egg
-├── LICENSE
-├── README.md
-├── requirements.txt
-├── setup.cfg
-├── setup.py
-├── treepy/
-│   ├── __init__.py
-│   ├── __pycache__/
-│   └── tree_generation.py
-└── UNKNOWN.egg-info/
-    ├── dependency_links.txt
-    ├── PKG-INFO
-    ├── requires.txt
-    ├── SOURCES.txt
-    └── top_level.txt
-```
+<img src="images/treepy.png" width="40%" align="center">
+
 
 ### `treepy -d` (directories only)
 
