@@ -246,4 +246,63 @@ multils_generation.cpython-36…     mls_generation.cpython-36.pyc
 
 <img src="images/tls.png" width="79%" align="center">
 
+`tls` is a combination of `mls` and `treepy` and was designed with the purpose of displaying above your bash prompt.
+
+### `tls -h` (getting help)
+
+```
+usage: tls_python [-h] [-a] [-p P] [-g G] [-d] [-f] [-q] [-D D] [-M M] [-A]
+                  [-P P] [-r] [-R R]
+                  [path]
+
+optional arguments:
+  -h, --help  show this help message and exit
+
+BOTH:
+  Parameters relating to both treepy and mls
+
+  path        Root directory. Default is working directory
+  -a          Include those starting with `.`
+  -p P        percentage of terminal width taken up by mls. If not provided,
+              treepy is prioritized
+  -g G        A valid tabulate tablefmt string. E.g. `fancy_grid`, `plain`,
+              `simple`
+
+TREEPY:
+  Parameters relating to treepy
+
+  -d          Only display directories
+  -f          Display the full path
+  -q          Append quick-access variable path
+  -D D        Maximum depth, default 3
+  -M M        Max items to display per depth, default 3
+  -A          Ignore parameters -D and -M
+
+MLS:
+  Parameters relating to mls
+
+  -P P        Number of parents to show, default 3
+  -r          Use .. notation for paths relative to `path`
+  -R R        Max number of rows to display in each parent directory, default
+              5
+```
+
+### Integrate `tls` into your bash prompt
+
+The bashprompt can be modified with the `PS1` environmental variable. Rather than piping the output of `tls` into `PS1`, `tls` can be sourced with the `PROMPT_COMMAND` environmental variable which is called everytime after a command is run.
+
+In your `.bashrc` add the following:
+
+
+
+
+
+
+
+
+
+
+
+
+
 
