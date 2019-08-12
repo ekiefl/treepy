@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='treepy',
-    version="0.6",
+    version="0.8",
     packages=find_packages(),
     author_email = 'kiefl.evan@gmail.com',
     author = 'Evan Kiefl',

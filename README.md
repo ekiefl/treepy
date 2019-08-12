@@ -3,12 +3,6 @@ Couple of command line utilities for visualizing filepaths in the context of the
 
 # Installation
 
-**PyPI:**
-
-```
-pip install treepy
-```
-
 **git clone:**
 
 ```
@@ -16,6 +10,14 @@ git clone https://github.com/ekiefl/treepy.git
 cd treepy
 python setup.py install
 treepy -h
+```
+
+**PyPI:**
+
+**NOTE: not working right now**
+
+```
+pip install treepy
 ```
 
 # Usage
