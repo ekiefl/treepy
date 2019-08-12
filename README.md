@@ -1,5 +1,5 @@
 # treepy
-Couple of command line utilities for visualizing filepaths in the context of their directory structure.
+Couple of command line utilities for visualizing filepaths in the context of their directory structure. Includes the commands `treepy`, `mls`, and `tls`.
 
 # Installation
 
