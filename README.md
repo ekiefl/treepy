@@ -293,16 +293,104 @@ The bashprompt can be modified with the `PS1` environmental variable. Rather tha
 
 In your `.bashrc` add the following:
 
+```bash
+export TLS_d=1
+export TLS_f=0
+export TLS_q=1
+export TLS_r=1
+export TLS_A=0
+export TLS_P=3
+export TLS_R=5
+export TLS_D=3
+export TLS_M=3
+export TLS_p=''
+export TLS_g='fancy_grid'
 
+function prompt_command {
+    TLS_OPTS=''
 
+    # flags
+    if [[ $TLS_d -eq 1 ]]; then TLS_OPTS+="-d "; fi
+    if [[ $TLS_f -eq 1 ]]; then TLS_OPTS+="-f "; fi
+    if [[ $TLS_q -eq 1 ]]; then TLS_OPTS+="-q "; fi
+    if [[ $TLS_r -eq 1 ]]; then TLS_OPTS+="-r "; fi
+    if [[ $TLS_A -eq 1 ]]; then TLS_OPTS+="-A "; fi
 
+    # parameters
+    if [[ ! -z $TLS_P ]]; then TLS_OPTS+="-P "$TLS_P" "; fi
+    if [[ ! -z $TLS_R ]]; then TLS_OPTS+="-R "$TLS_R" "; fi
+    if [[ ! -z $TLS_D ]]; then TLS_OPTS+="-D "$TLS_D" "; fi
+    if [[ ! -z $TLS_M ]]; then TLS_OPTS+="-M "$TLS_M" "; fi
+    if [[ ! -z $TLS_p ]]; then TLS_OPTS+="-p "$TLS_p" "; fi
+    if [[ ! -z $TLS_g ]]; then TLS_OPTS+="-g "$TLS_g" "; fi
 
+    source tls $TLS_OPTS
+}
 
+export PROMPT_COMMAND=prompt_command
+```
 
+After sourcing your `~/bashrc`, `tls` will be run after each command and will thus show up directly above your bash prompt. Below is a copy-paste of my shell demonstrating how it works in practice:
 
-
-
-
-
-
-
+```bash
+▶▶ pwd
+/Users/evan/Software
+╒══════════════════════════════════════════════════════════════════════════════╤════════════════════════════════════╕
+│ ▶ /Users/                                                                    │ ♬                                  │
+│ ../../evan       ../../Shared                                                │ Software/ → $TREE0/                │
+│ ▶ /Users/evan/                                                               │ ├── popvar/ → $TREE1/              │
+│ ../Software         ../googledrive      ../bin              ../Library       │ │   ├── sandbox/ → $TREE2/         │
+│ ../Applications     ../Public           ../Downloads        ../igv           │ │   │   └── test-output/ → $TREE3/ │
+│ ../Dropbox          ../seaborn-data     ../Movies           ../Pictures      │ │   └── tests/ → $TREE4/           │
+│ ../Desktop          ../Academics        ../asdf             ../Zotero        │ │       └── sandbox/ → $TREE5/     │
+│ ../virtual-envs     ../Documents        ../Dotfiler         ../nltk_data     │ ├── sra-tools/ → $TREE6/           │
+│ …                                                                            │ │   ├── build/ → $TREE7/           │
+│ ▶ /Users/evan/Software/                                                      │ │   │   ├── MSVC/ → $TREE8/        │
+│ ./popvar                      ./FastQC                                       │ │   │   └── Xcode/ → $TREE9/       │
+│ ./sra-tools                   ./illumina-utils                               │ │   ├── shared/ → $TREE10/         │
+│ ./hmmer-3.1b2                 ./vsearch                                      │ │   ├── setup/ → $TREE11/          │
+│ ./test-mcg-classifier         ./world-map-r                                  │ │   └── …                          │
+│ ./stunning-disco              ./slopnchop                                    │ ├── hmmer-3.1b2/ → $TREE12/        │
+│ …                                                                          ♬ │ └── …                              │
+╘══════════════════════════════════════════════════════════════════════════════╧════════════════════════════════════╛
+▶▶ cd $TREE5/
+╒══════════════════════════════════════════════════════════════════════════════════════╤════════════════════════════╕
+│ ▶ /Users/evan/Software/popvar/                                                       │ ♬                          │
+│ ../../sandbox     ../../tests                                                        │                            │
+│ ▶ /Users/evan/Software/popvar/tests/                                                 │                            │
+│ ../sandbox                                                                           │                            │
+│ ▶ /Users/evan/Software/popvar/tests/sandbox/                                         │ sandbox/ → $TREE0/         │
+│ ./test-output                                                                      ♬ │ └── test-output/ → $TREE1/ │
+╘══════════════════════════════════════════════════════════════════════════════════════╧════════════════════════════╛
+▶▶ TLS_d=0
+╒═════════════════════════════════════════════════════════════════╤═════════════════════════════════════════════════╕
+│ ▶ /Users/evan/Software/popvar/                                  │ ♬                                               │
+│ ../../tests               ../../BLOSUM_matrix.py                │                                                 │
+│ ../../sandbox             ../../README.md                       │                                                 │
+│ ▶ /Users/evan/Software/popvar/tests/                            │                                                 │
+│ ../sandbox                                                      │                                                 │
+│ ../00_run_substitution_matrix…                                  │ sandbox/ → $TREE0/                              │
+│ ▶ /Users/evan/Software/popvar/tests/sandbox/                    │ ├── test-output/ → $TREE1/                      │
+│ ./test-output                                                   │ │   └── BLOSUM.txt → $TREE2                     │
+│ ./mock_non_outlier_coverages.…                                  │ ├── mock_non_outlier_coverages.txt → $TREE3     │
+│ ./mock_non_outlier_coverage_s…                                  │ ├── mock_non_outlier_coverage_stds.txt → $TREE4 │
+│ ./mock_aa_variability.txt                                     ♬ │ └── …                                           │
+╘═════════════════════════════════════════════════════════════════╧═════════════════════════════════════════════════╛
+▶▶ TLS_R=2; TLS_P=4
+╒═════════════════════════════════════════════════════════════════╤═════════════════════════════════════════════════╕
+│ ▶ /Users/evan/Software/                                         │ ♬                                               │
+│ ../../../popvar                                                 │                                                 │
+│ ../../../sra-tools                                              │                                                 │
+│ …                                                               │                                                 │
+│ ▶ /Users/evan/Software/popvar/                                  │                                                 │
+│ ../../tests               ../../BLOSUM_matrix.py                │                                                 │
+│ ../../sandbox             ../../README.md                       │                                                 │
+│ ▶ /Users/evan/Software/popvar/tests/                            │                                                 │
+│ ../sandbox                                                      │ sandbox/ → $TREE0/                              │
+│ ../00_run_substitution_matrix…                                  │ ├── test-output/ → $TREE1/                      │
+│ ▶ /Users/evan/Software/popvar/tests/sandbox/                    │ │   └── BLOSUM.txt → $TREE2                     │
+│ ./test-output                                                   │ ├── mock_non_outlier_coverages.txt → $TREE3     │
+│ ./mock_non_outlier_coverages.…                                  │ ├── mock_non_outlier_coverage_stds.txt → $TREE4 │
+│ …                                                             ♬ │ └── …                                           │
+╘═════════════════════════════════════════════════════════════════╧═════════════════════════════════════════════════╛
+```
