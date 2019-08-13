@@ -301,6 +301,8 @@ export TLS_f=0
 export TLS_q=1
 export TLS_r=1
 export TLS_A=0
+export TLS_m=0
+export TLS_N=30
 export TLS_P=3
 export TLS_R=5
 export TLS_D=3
@@ -317,8 +319,10 @@ function prompt_command {
     if [[ $TLS_q -eq 1 ]]; then TLS_OPTS+="-q "; fi
     if [[ $TLS_r -eq 1 ]]; then TLS_OPTS+="-r "; fi
     if [[ $TLS_A -eq 1 ]]; then TLS_OPTS+="-A "; fi
+    if [[ $TLS_m -eq 1 ]]; then TLS_OPTS+="-m "; fi
 
     # parameters
+    if [[ ! -z $TLS_N ]]; then TLS_OPTS+="-N "$TLS_N" "; fi
     if [[ ! -z $TLS_P ]]; then TLS_OPTS+="-P "$TLS_P" "; fi
     if [[ ! -z $TLS_R ]]; then TLS_OPTS+="-R "$TLS_R" "; fi
     if [[ ! -z $TLS_D ]]; then TLS_OPTS+="-D "$TLS_D" "; fi
