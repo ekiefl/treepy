@@ -69,7 +69,7 @@ class MultiLS(object):
         max_child_len = min([truncate_len, max([len(child.name) \
                                                 + (1 if child.is_dir() else 0) \
                                                 + len(dotdot_prefix) \
-                                                for child in children])])
+                                                for child in children]) if len(children) else truncate_len])
 
         num_columns = (self.max_text_width + tab_len) // (max_child_len + tab_len)
         if num_columns > max_num_columns: num_columns = max_num_columns
