@@ -71,6 +71,25 @@ def extend_unused_space(output1, output2, total_space):
     return output1
 
 
+def truncate_lines(output_mls, output_treepy, args):
+    if len(output_mls.display_lines) > args['N']:
+        output_mls.display_lines = output_mls.display_lines[-args['N']:]
+        output_mls.display_lines.append(treepy.STYLIZE_MORE('...'))
+
+    if len(output_treepy.display_lines) > args['N']:
+        output_treepy.display_lines = output_treepy.display_lines[:args['N']]
+        output_treepy.display_lines.append(treepy.STYLIZE_MORE('...'))
+
+    if args['m'] and len(output_treepy.display_lines) > len(output_mls.display_lines):
+        output_treepy.display_lines = output_treepy.display_lines[:len(output_mls.display_lines)-1]
+        output_treepy.display_lines.append(treepy.STYLIZE_MORE('...'))
+
+    output_treepy.used_lines = len(output_treepy.display_lines)
+    output_mls.used_lines = len(output_mls.display_lines)
+
+    return output_mls, output_treepy
+
+
 def main(args):
     terminal_width = int(os.popen('stty size', 'r').read().split()[1])
     lbuffer, mbuffer, rbuffer = 2, 3, 2
@@ -81,7 +100,6 @@ def main(args):
         args['max_text_width'] = int(usable_terminal_width * args['p'] / 100)
         mls_output = gen_mls_output(args)
 
-
         args['max_text_width'] = usable_terminal_width - mls_width
         treepy_output = gen_treepy_output(args)
     else:
@@ -91,6 +109,7 @@ def main(args):
         args['max_text_width'] = usable_terminal_width - treepy_output.used_space
         mls_output = gen_mls_output(args)
 
+    mls_output, treepy_output = truncate_lines(mls_output, treepy_output, args)
     mls_output, treepy_output = align_to_bottom(mls_output, treepy_output)
     mls_output = extend_unused_space(mls_output, treepy_output, usable_terminal_width)
 
@@ -106,6 +125,8 @@ if __name__ == '__main__':
     groupB.add_argument('-a', action='store_true', help='Include those starting with `.`')
     groupB.add_argument('-p', type=float, default=None, help='percentage of terminal width taken up by mls. If not provided, treepy is prioritized')
     groupB.add_argument('-g', type=str, default='fancy_grid', help='A valid tabulate tablefmt string. E.g. `fancy_grid`, `plain`, `simple`')
+    groupB.add_argument('-N', type=int, default=50, help='Max number of lines tls should take up (excluding border), default 50')
+    groupB.add_argument('-m', action='store_true', help='Truncate treepy output to match line number of `mls`')
 
     groupT = ap.add_argument_group('TREEPY', 'Parameters relating to treepy')
     groupT.add_argument('-d', action='store_true', help='Only display directories')
