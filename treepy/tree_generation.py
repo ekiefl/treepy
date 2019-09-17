@@ -125,7 +125,8 @@ class DisplayablePath(object):
         if quickaccess_display:
             display += treepy.STYLIZE_QUICKACCESS(quickaccess_display)
 
-        if not self.path.name == '…': self.increment_number_paths()
+        if not self.path.name == '…':
+            self.increment_number_paths()
 
         return display
 

@@ -93,7 +93,9 @@ def truncate_lines(output_mls, output_treepy, args):
 def main(args):
     terminal_width = int(os.popen('stty size', 'r').read().split()[1])
     lbuffer, mbuffer, rbuffer = 2, 3, 2
-    usable_terminal_width = terminal_width - lbuffer - mbuffer - rbuffer
+    # fudge factor: the math on lengths does not work in some instances involving `...`
+    fudge_factor = 3
+    usable_terminal_width = terminal_width - lbuffer - mbuffer - rbuffer - fudge_factor
 
     if args['p']:
         mls_width = int(usable_terminal_width * args['p'] / 100)
