@@ -149,4 +149,7 @@ if __name__ == '__main__':
         args['D'] = None
         args['M'] = None
 
-    main(args)
+    try:
+        main(args)
+    except:
+        pass
