@@ -7,6 +7,7 @@ from treepy.mls_generation import MultiLS
 from treepy.tree_generation import DisplayablePath
 
 import os
+import sys
 import argparse
 
 from pathlib import Path
@@ -143,6 +144,9 @@ if __name__ == '__main__':
     groupM.add_argument('-r', action='store_true', help='Use .. notation for paths relative to `path`')
     groupM.add_argument('-R', default=5, type=int, help='Max number of rows to display in each parent directory, default 5')
 
+    groupE = ap.add_argument_group('EXTRA', 'Extra stuff')
+    groupE.add_argument('--debug', action='store_true')
+
     args = ap.parse_args().__dict__
 
     if args['A']:
@@ -151,5 +155,9 @@ if __name__ == '__main__':
 
     try:
         main(args)
-    except:
-        pass
+    except Exception as e:
+        if args['debug']:
+            print(e)
+            sys.exit()
+        else:
+            print('`tls` ran with error. Run `tls --debug` to see traceback.')
