@@ -151,3 +151,4 @@ class DisplayablePath(object):
             parent = parent.parent
 
         return ''.join(reversed(parts))
+
