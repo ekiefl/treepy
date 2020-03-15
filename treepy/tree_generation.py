@@ -79,6 +79,10 @@ class DisplayablePath(object):
         if not cls.args['a'] and str(path.name).startswith('.'):
             return False
 
+        if 'Icon' in str(path.name):
+            # Path likely has some messy characters such as '\r'--skip it
+            return False
+
         return True
 
     @classmethod
